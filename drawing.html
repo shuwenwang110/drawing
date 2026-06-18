@@ -1,0 +1,96 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drawing - Shuwen Wang Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="white-spider.css" />
+  <script src="libraries/p5.min.js" defer></script>
+  <script src="space-effects.js" defer></script>
+  <script src="white-spider.js" defer></script>
+  <script src="protect-media.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <nav class="top-nav" aria-label="Page navigation">
+      <a class="back-link" href="https://shuwenwang110.github.io/Portfolio/" data-transition>Back to portfolio</a>
+      <p class="page-explain">Drawing gathers paintings, studies, and studio sketches. It is a direct record of observation, hand skill, material practice, and visual sensitivity.</p>
+    </nav>
+    <section class="project-hero"><div><p class="eyebrow">Studio practice</p><h1 class="project-title">Drawing</h1></div></section>
+    <section class="drawing-feature" aria-label="Drawing moving image">
+      <figure class="work-frame">
+        <img src="drawing/drawing-01.gif" alt="Drawing moving image study" loading="eager" />
+        <figcaption><span>Drawing</span><span>Moving Image</span></figcaption>
+      </figure>
+    </section>
+    <section class="drawing-grid" id="drawingGrid" aria-label="Drawing works"></section>
+    <a class="bottom-back-link" href="https://shuwenwang110.github.io/Portfolio/" data-transition>Back to portfolio</a>
+  </main>
+  <div class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+    <img class="lightbox-image" src="" alt="" />
+  </div>
+  <div class="fade-screen" aria-hidden="true"></div>
+  <script>
+    const images = Array.from({ length: 23 }, (_, index) => `drawing/drawing-${String(index + 2).padStart(2, "0")}.png`);
+    const drawingGrid = document.getElementById("drawingGrid");
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImage = document.querySelector(".lightbox-image");
+
+    images.forEach((src, index) => {
+      const button = document.createElement("button");
+      button.className = "drawing-thumb";
+      button.type = "button";
+      button.dataset.full = src;
+      button.setAttribute("aria-label", `Open drawing ${String(index + 1).padStart(2, "0")}`);
+      button.innerHTML = `<img src="${src}" alt="Drawing work ${String(index + 1).padStart(2, "0")}" loading="lazy" />`;
+      drawingGrid.appendChild(button);
+    });
+
+    function openLightbox(src, alt) {
+      lightboxImage.src = src;
+      lightboxImage.alt = alt;
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.classList.add("lightbox-open");
+    }
+
+    function closeLightbox() {
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lightbox-open");
+      setTimeout(() => {
+        lightboxImage.src = "";
+      }, 180);
+    }
+
+    document.querySelectorAll(".drawing-thumb").forEach(button => {
+      button.addEventListener("click", () => {
+        const image = button.querySelector("img");
+        openLightbox(button.dataset.full, image.alt);
+      });
+    });
+
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && document.body.classList.contains("lightbox-open")) {
+        closeLightbox();
+      }
+    });
+
+    document.querySelectorAll("[data-transition]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        document.body.classList.add("is-leaving");
+        setTimeout(() => {
+          window.location.href = link.href;
+        }, 520);
+      });
+    });
+  </script>
+</body>
+</html>
+
